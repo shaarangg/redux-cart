@@ -1,4 +1,5 @@
-import { REMOVE, CLEAR_CART, INCREASE, DECREASE, GET_TOTALS } from "./actions";
+import { act } from "@testing-library/react";
+import { REMOVE, CLEAR_CART, INCREASE, DECREASE, GET_TOTALS, TOGGLE_AMOUNT } from "./actions";
 function reducer(state, action) {
     if (action.type === REMOVE) {
         const id = action.payload.id;
@@ -19,20 +20,15 @@ function reducer(state, action) {
         };
     }
     if (action.type === DECREASE) {
-        if (action.payload.amount === 1) {
-            const id = action.payload.id;
-            return { ...state, cart: state.cart.filter((item) => item.id !== id) };
-        } else {
-            return {
-                ...state,
-                cart: state.cart.map((item) => {
-                    if (item.id === action.payload.id) {
-                        item.amount -= 1;
-                    }
-                    return item;
-                }),
-            };
-        }
+        return {
+            ...state,
+            cart: state.cart.map((item) => {
+                if (item.id === action.payload.id) {
+                    item.amount -= 1;
+                }
+                return item;
+            }),
+        };
     }
 
     if (action.type === GET_TOTALS) {
@@ -49,6 +45,20 @@ function reducer(state, action) {
         );
         total = parseFloat(total.toFixed(2));
         return { ...state, amount: amount, total: total };
+    }
+
+    if (action.type === TOGGLE_AMOUNT) {
+        return {
+            ...state,
+            cart: state.cart.filter((item) => {
+                if (item.id === action.payload.id) {
+                    if (action.payload.toggle == "inc") item.amount += 1;
+
+                    if (action.payload.toggle == "dec") item.amount -= 1;
+                }
+                return item;
+            }),
+        };
     }
     return state;
 }
