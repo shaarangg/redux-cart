@@ -15,13 +15,13 @@ import { Provider } from "react-redux";
 function App() {
     // cart setup
 
-    const initalStore = { count: 1, amount: 5 };
+    const initalStore = { amount: 5, cart: cartItems, total: 105 };
     const store = createStore(reducer, initalStore);
     store.dispatch({ type: "HELLO" });
     return (
         <Provider store={store}>
             <Navbar />
-            <CartContainer cart={cartItems} />
+            <CartContainer />
         </Provider>
     );
 }
